@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shuffle !{% endblock %}
+
+{% block body %}
+  {% if saison is not null %}
+   {{ saison.name }}
+  {% endif %}
+
+    {% for sentence in saison.sentences %}
+    <div class="sentence" data-id={{sentence.id}}>
+        {{sentence.id}} <input class="content" type="text" value="{{sentence.content}}"><input class="constraints" type="text" value="{{sentence.constraintnumber}}"><a href="{{path('deletesentence', {id_saison: saison.id, id: sentence.id}) }}">-</a></br>
+    </div>
+    {% endfor %}
+    <a id='submit'>Submit</a>
+    <br><a href="{{path('incrementshuffle', {id: saison.id})}}">+</a>
+    <br><a href="{{path('deleteshuffle', {id: saison.id})}}">delete</a>
+    <br><a href="{{path('shuffleshuffle', {id: saison.id})}}">shuffle</a>
+
+    <script src="{{ asset('js/pushSentence.js')}}"> 
+    </script>
+    <script>
+      let mySaver = new pushSentence('#submit', "{{path('putsentences')}}")
+      mySaver.start() 
+      </script>
+{% endblock %}  

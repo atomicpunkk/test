@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shuffle !{% endblock %}
+
+{% block body %}
+    <form action="{{path('newshuffle')}}" method='POST'>
+    <label for="name">Nom :</label>
+      <input id="" name="name" type="text">
+    <button type="submit" >submit !</button>
+    </form>
+    
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shuffle !{% endblock %}
+
+{% block body %}
+
+    {% for saison in saisons %}
+        <a  href="{{ path('getshuffle', {'id': saison.id }) }}" class="btn">{{ saison.name }}</a>
+    {% endfor %}
+    <a   href="{{ path('newshuffle')}}" class="btn">+</a>
+
+{% endblock %}

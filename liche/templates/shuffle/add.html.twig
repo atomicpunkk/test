@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shuffle !{% endblock %}
+
+{% block body %}
+  {% if saison is not null %}
+   {{ saison.name }}
+  {% endif %}
+
+    <form action="POST">
+    {% for sentence in saison.sentences %}
+        
+    {% endfor %}
+    <button type="submit" >submit !</button>
+    </form>
+    
+{% endblock %}
