@@ -3,19 +3,41 @@
 {% block title %}Shuffle !{% endblock %}
 
 {% block body %}
-  {% if saison is not null %}
-   {{ saison.name }}
-  {% endif %}
 
+<div class="container">
+<p class="title">Remplis tes gages ;D<p>
+  {% if saison is not null %}
+  <div class="row">
+   <h3>{{ saison.name }}</h3> 
+   <a href="{{path('deleteshuffle', {id: saison.id})}}" class="btn btn-danger" style="margin-top:5px; margin-left:10px;">delete</a>
+   </div>
+  {% endif %}
+<br>
+
+     {% set nbr = 1 %}
+    
     {% for sentence in saison.sentences %}
-    <div class="sentence" data-id={{sentence.id}}>
-        {{sentence.id}} <input class="content" type="text" value="{{sentence.content}}"><input class="constraints" type="text" value="{{sentence.constraintnumber}}"><a href="{{path('deletesentence', {id_saison: saison.id, id: sentence.id}) }}">-</a></br>
+   
+    <div class="sentence form-group row" data-id={{sentence.id}}>
+         <span class="col-md-1">{{nbr}}</span><input class="content form-control col-md-5 space-right" type="text" value="{{sentence.content}}" placeholder="Description du gage"><input class="constraints form-control col-md-5 space-right" type="text" value="{{sentence.constraintnumber}}" placeholder="<36"><a href="{{path('deletesentence', {id_saison: saison.id, id: sentence.id}) }}"><span class="btn btn-danger">-</span></a></br>
+
     </div>
+    
+    
+    
+    {% set nbr = nbr + 1 %}
+    
     {% endfor %}
-    <a id='submit'>Submit</a>
-    <br><a href="{{path('incrementshuffle', {id: saison.id})}}">+</a>
-    <br><a href="{{path('deleteshuffle', {id: saison.id})}}">delete</a>
-    <br><a href="{{path('shuffleshuffle', {id: saison.id})}}">shuffle</a>
+ 
+ 
+    <a href="{{ path('incrementshuffle',{'id': saison.id, 'nbr':'1'}) }}"><span class="btn btn-primary">+1<span></a>
+    <a href="{{ path('incrementshuffle',{'id': saison.id, 'nbr':'10'}) }}"><span class="btn btn-primary">+10<span></a>
+    <a href="{{ path('incrementshuffle',{'id': saison.id, 'nbr':'100'}) }}"><span class="btn btn-primary">+100<span></a>
+ 
+    <br>  <br>
+    <a id='submit' class="btn btn-success" style="width:200px;">Valider les données</a>
+    
+    <br><a href="{{path('shuffleshuffle', {id: saison.id})}}" class="btn btn-info" style="margin-top:5px;width:200px;">shuffle</a>
 
     <script src="{{ asset('js/pushSentence.js')}}"> 
     </script>
@@ -23,4 +45,5 @@
       let mySaver = new pushSentence('#submit', "{{path('putsentences')}}")
       mySaver.start() 
       </script>
-{% endblock %}  
+</div>
+{% endblock %}   

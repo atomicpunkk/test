@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Saison;
 use App\Entity\Sentences;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class ShuffleController extends AbstractController
 {
@@ -48,41 +49,39 @@ class ShuffleController extends AbstractController
     }
 
 
-    /**
-     * @Route("/shuffle/{id}", name="getshuffle")
-     */
-    public function get($id)
-    {
-        $saison = $this->getDoctrine()
-        ->getRepository(Saison::class)
-        ->find($id);
-
-        return $this->render('shuffle/get.html.twig', [
-            'saison' => $saison,
-        ]);
-    }
+    
 
      /**
-     * @Route("/shuffle/increment/{id}", name="incrementshuffle")
+     * @Route("/shuffle/increment/{id}/{nbr}", name="incrementshuffle")
      */
-    public function increment($id)
+    public function increment($id, $nbr)
     {
-        $entityManager = $this->getDoctrine()->getManager();
 
+        $entityManager = $this->getDoctrine()->getManager();
+	
         $saison = $this->getDoctrine()
         ->getRepository(Saison::class)
         ->find($id);
-
-        $sentence = new Sentences();
-        $sentence->setContent("");
-        $sentence->setConstraintnumber("");
-        $sentence->setSaison($saison);
-
+		
+        
+        for ($i=1; $i<=$nbr; $i++){
+      	    $sentence = new Sentences();
+        	$sentence->setContent("");
+       	 	$sentence->setConstraintnumber("");
+        	$sentence->setSaison($saison);
+		
         $entityManager->persist($sentence);
-
+		
+        }
+        
+        
+        
         $entityManager->flush();
+  
         return $this->redirectToRoute('getshuffle', [
-            'id' => $id,
+        		'id' => $id,
+        		
+        		
         ]);
 
     }
@@ -137,10 +136,70 @@ class ShuffleController extends AbstractController
         ]);
 
     }
+    
+            /**
+     * @Route("/put", name="putsentences")
+     */
+    public function put()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $sentence = $this->getDoctrine()
+        ->getRepository(Sentences::class)
+        ->find($_POST['id']);
+
+        $sentence->setContent($_POST['content']);
+        $sentence->setConstraintnumber($_POST['constraint']);
+        $entityManager->persist($sentence);
+
+        $entityManager->flush();
+
+        $response = new Response(
+            'OK',
+            Response::HTTP_OK,
+            array('content-type' => 'text/html')
+        );
+
+        return $response;
+    }
+    /**
+     * @Route("/shuffle/{id_saison}/delete/{id}", name="deletesentence")
+     */
+    public function deletesaison($id_saison, $id)
+    {
+    	$sentence = $this->getDoctrine()
+    	->getRepository(Sentences::class)
+    	->find($id);
+    	
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->remove($sentence);
+    	$entityManager->flush();
+    	
+    	return $this->redirectToRoute('getshuffle', [
+    			'id' => $id_saison
+    	]);
+    }
+    
+    /**
+     * @Route("/shuffle/{id}", name="getshuffle")
+     */
+    public function get($id)
+    {
+    	
+    	
+    	$saison = $this->getDoctrine()
+    	->getRepository(Saison::class)
+    	->find($id);
+    	
+    	return $this->render('shuffle/get.html.twig', [
+    			'saison' => $saison,
+    		
+    	]);
+    }
+    
+    
+    
  
-}
-function shuffleTab($tab){
-    $array = Array();
-    //TODO
-    return $array; 
+
+ 
 }

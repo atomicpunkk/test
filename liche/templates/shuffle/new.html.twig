@@ -3,10 +3,14 @@
 {% block title %}Shuffle !{% endblock %}
 
 {% block body %}
+<div class="container">
+    <p class="title">Choisis le nom de ton modèle<p>
     <form action="{{path('newshuffle')}}" method='POST'>
-    <label for="name">Nom :</label>
-      <input id="" name="name" type="text">
-    <button type="submit" >submit !</button>
+    <div class="form-group">
+    <label for="name" class="form-text">Nom :</label>
+      <input id="" name="name" type="text" class="form-control" required>
+     </div>
+    <button type="submit" class="btn btn-success" >submit !</button>
     </form>
-    
+</div>   
 {% endblock %}

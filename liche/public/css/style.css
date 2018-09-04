@@ -1,0 +1,24 @@
+.add
+{
+    color:red;
+    font-size:20px;
+}
+.title
+{
+    font-size:20px;
+    font-style:italic;
+    margin-bottom:-4px;
+    margin-top: 10px;
+    text-align:center;
+    
+}
+.container
+{
+    margin-top:30px;
+}
+.space-right{
+    margin-right:20px;
+}
+.space-left{
+    margin-left:15px;
+}

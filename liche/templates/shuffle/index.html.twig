@@ -3,10 +3,11 @@
 {% block title %}Shuffle !{% endblock %}
 
 {% block body %}
-
+<div class="container">
+<p class="title">Ici tu peux créer un nouveau modèle à shuffle<p>
     {% for saison in saisons %}
-        <a  href="{{ path('getshuffle', {'id': saison.id }) }}" class="btn">{{ saison.name }}</a>
+        <a  href="{{ path('getshuffle', {'id': saison.id }) }}" class="btn btn-success space-left">{{ saison.name }}</a>
     {% endfor %}
-    <a   href="{{ path('newshuffle')}}" class="btn">+</a>
-
+    <a   href="{{ path('newshuffle')}}" class="btn"><span class="btn btn-primary">+</span></a>
+</div>
 {% endblock %}
