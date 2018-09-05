@@ -28,6 +28,11 @@ class Saison
      */
     private $sentences;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isShuffle;
+
     public function __construct()
     {
         $this->sentences = new ArrayCollection();
@@ -77,6 +82,18 @@ class Saison
                 $sentence->setSaison(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsShuffle(): ?bool
+    {
+        return $this->isShuffle;
+    }
+
+    public function setIsShuffle(bool $isShuffle): self
+    {
+        $this->isShuffle = $isShuffle;
 
         return $this;
     }

@@ -39,6 +39,13 @@
     
     <br><a href="{{path('shufflethis', {id: saison.id})}}" class="btn btn-info" style="margin-top:5px;width:200px;">shuffle</a>
 
+
+  {% if saison.isShuffle %}
+    <br><a href="#" class="btn btn-info" style="margin-top:5px;width:200px;">save</a>
+{% endif %}
+
+
+
     <script src="{{ asset('js/pushSentence.js')}}"> 
     </script>
     <script>

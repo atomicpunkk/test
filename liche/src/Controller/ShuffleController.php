@@ -9,6 +9,7 @@ use App\Entity\Sentences;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use src\Repository\SentencesRepository;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShuffleController extends AbstractController
 {
@@ -36,6 +37,7 @@ class ShuffleController extends AbstractController
         if(isset($_POST['name'])){
             $saison = new Saison();
             $saison->setName($_POST['name']);
+            $saison->setisShuffle(false);
             $entityManager->persist($saison);
             $entityManager->flush();
             return $this->redirectToRoute('getshuffle', [
@@ -76,7 +78,9 @@ class ShuffleController extends AbstractController
 		
         }
         
-        
+       
+      
+        $saison->setisShuffle(false);
         
         $entityManager->flush();
   
@@ -140,7 +144,7 @@ class ShuffleController extends AbstractController
     	
     
     	foreach($test as $try){
-    		array_push($phrases, array('phrase'=> $try->getContent(),'const'=> $try->getConstraintnumber()));
+    		array_push($phrases, array('phrase'=> $try->getContent(),'const'=> $try->getConstraintnumber(),'id' =>$try->getId()));
     	}
    
 		
@@ -180,7 +184,7 @@ class ShuffleController extends AbstractController
     					
     				}
     				
-    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbsupp));
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbsupp, 'id'=>$const['id']));
     			}
     		}
     		#-------------------------------------------
@@ -198,7 +202,7 @@ class ShuffleController extends AbstractController
     				while (array_search($numbinf, array_column($arraycglo, 'nbr')) !== false) {
     					$numbinf = rand(1,$tempinf);
     				}
-    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf));
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf, 'id'=>$const['id']));
     				
     			}
     			else{
@@ -207,7 +211,7 @@ class ShuffleController extends AbstractController
     					$numbinf = rand(1,$tempinf);
     				}
     				
-    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf));
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf, 'id'=>$const['id']));
     				
     			}
     		}
@@ -236,7 +240,7 @@ class ShuffleController extends AbstractController
     	#--------Ajout tableau phrases et nombre--------
     	
     	foreach($psansc as $phrasesansc){
-    		array_push($arrayscglo, array('phrase'=> $phrasesansc['phrase'],'nbr'=> $rangenumber[$i]));
+    		array_push($arrayscglo, array('phrase'=> $phrasesansc['phrase'],'nbr'=> $rangenumber[$i], 'id' => $phrasesansc['id']));
     		$i+=1;
     	}
     	#-------------------------------------------
@@ -247,7 +251,23 @@ class ShuffleController extends AbstractController
     	#-------------------------------------------
     	
     	
-    	
+    	if(empty($error)){
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach($arrayglo as $save){
+                $object = $this->getDoctrine()
+                ->getRepository(Sentences::class)
+                ->find($save['id']);
+                
+                $object->setOrders($save['nbr']);
+            }
+            $saison = $this->getDoctrine()
+            ->getRepository(Saison::class)
+            ->find($id);
+            $saison->setisShuffle(true);
+            $entityManager->flush();
+
+
+        }
     	
     	
  
@@ -263,16 +283,7 @@ class ShuffleController extends AbstractController
     	]);
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  
     
     
     
@@ -294,6 +305,10 @@ class ShuffleController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($saison);
+
+        
+
+
         $entityManager->flush();
         
 
@@ -313,7 +328,7 @@ class ShuffleController extends AbstractController
         $saison = $this->getDoctrine()
         ->getRepository(Saison::class)
         ->find($id);
-
+       
         
         $newSentencesTab=shuffleTab($saison.getSentences);
 
@@ -367,7 +382,15 @@ class ShuffleController extends AbstractController
     	->find($id);
     	
     	$entityManager = $this->getDoctrine()->getManager();
-    	$entityManager->remove($sentence);
+        $entityManager->remove($sentence);
+
+        $saison = $this->getDoctrine()
+        ->getRepository(Saison::class)
+        ->find($id_saison);
+        $saison->setisShuffle(false);
+
+
+        
     	$entityManager->flush();
     	
     	return $this->redirectToRoute('getshuffle', [
