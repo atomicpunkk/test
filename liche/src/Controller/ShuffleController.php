@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Saison;
 use App\Entity\Sentences;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use src\Repository\SentencesRepository;
+use Doctrine\ORM\EntityManager;
 
 class ShuffleController extends AbstractController
 {
@@ -85,6 +87,199 @@ class ShuffleController extends AbstractController
         ]);
 
     }
+    
+    
+    
+    
+    
+    /**
+     * @Route("/shuffle/shuffle/{id}", name="shufflethis")
+     */
+    public function shufflethis($id)
+    {
+    	$tenta=0;
+    	
+    	
+    	
+    	$repo = $this->getDoctrine()->getRepository(Sentences::class);
+    	$error=array();
+    	$phrases=array();
+    	$pavecc=array();
+    	$psansc=array();
+    	$arraycglo=array();
+    	
+    	/* count du nombre total */
+    	$nombretotal = $repo->createQueryBuilder('phrases')
+    	->select('COUNT(phrases)')
+    	->where('phrases.saison=?1')
+    	->setParameter(1, $id)
+    	->getQuery()
+    	->getSingleScalarResult();
+    	
+    	
+    	$rangenumber=range(1,$nombretotal);
+    	$arrayscglo=array();
+    	$i=0;
+    	
+    	
+    	
+    	$test = $repo->findBy(array('saison' => $id));
+    	
+    	
+    	
+    	
+    	
+    	
+    
+    	
+    	
+    		
+    		
+    		
+    	/* affichage des phrases */
+    	
+    
+    	foreach($test as $try){
+    		array_push($phrases, array('phrase'=> $try->getContent(),'const'=> $try->getConstraintnumber()));
+    	}
+   
+		
+    	
+    	
+  
+    	#--------Séparation contraintes-------------
+    	foreach($phrases as $phrase){
+    		if ($phrase['const']){
+    			array_push($pavecc, $phrase);
+    			
+    		}
+    		else {
+    			array_push($psansc, $phrase);
+    		}
+    		
+    	}
+    	#-------------------------------------------
+    	
+    	
+    	
+    	foreach($pavecc as $const){
+    		
+    		#--------Traitement supp--------------------
+    		
+    		if (preg_match("/^\>/",$const['const'])) {
+    			$tempsupp = preg_replace( '/[^0-9]/', '', $const['const']);
+    			$tempsupp += 1;
+    			if ($tempsupp>$nombretotal){
+    				array_push($error, array('phrase'=>"votre contrainte '" . $const['phrase'] .  "' depasse le nombre de phrases, la phrase est supprimée")) ;
+    				
+    			}
+    			else{
+    				$numbsupp = rand($tempsupp ,$nombretotal);
+    				while (array_search($numbsupp,array_column($arraycglo, 'nbr')) !== false) {
+    					$numbsupp = rand($tempsupp,$nombretotal);
+    					
+    				}
+    				
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbsupp));
+    			}
+    		}
+    		#-------------------------------------------
+    		
+    		
+    		#--------Traitement inf--------------------
+    		if (preg_match("/^\</",$const['const'])) {
+    			$tempinf = preg_replace( '/[^0-9]/', '', $const['const']);
+    			$tempinf -= 1;
+    			if ($tempinf>$nombretotal){
+    				array_push($error, array('phrase'=>"votre contrainte '" . $const['phrase'] . "' depasse le nombre de phrases, la condition est ignorée"));
+    				$tempinf = $nombretotal;
+    				
+    				$numbinf = rand(1,$tempinf);
+    				while (array_search($numbinf, array_column($arraycglo, 'nbr')) !== false) {
+    					$numbinf = rand(1,$tempinf);
+    				}
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf));
+    				
+    			}
+    			else{
+    				$numbinf = rand(1,$tempinf);
+    				while (array_search($numbinf, array_column($arraycglo, 'nbr')) !== false) {
+    					$numbinf = rand(1,$tempinf);
+    				}
+    				
+    				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf));
+    				
+    			}
+    		}
+    		#-------------------------------------------
+    		
+    	}
+    	
+    	#--------unset les valeurs possibles--------------------
+    	foreach($arraycglo as $try){
+    		$uns = $try['nbr'];
+    		$find = array_search($uns,$rangenumber);
+    		unset($rangenumber[$find]);
+    		
+    	}
+    	#-------------------------------------------
+    	
+    	
+    	
+    	
+    	#--------le random--------------------
+    	
+    	shuffle($rangenumber);
+    	#-------------------------------------------
+    	
+    	
+    	#--------Ajout tableau phrases et nombre--------
+    	
+    	foreach($psansc as $phrasesansc){
+    		array_push($arrayscglo, array('phrase'=> $phrasesansc['phrase'],'nbr'=> $rangenumber[$i]));
+    		$i+=1;
+    	}
+    	#-------------------------------------------
+    	
+    	#--------merge tableau avec et sans const--------
+    	$arrayglo = array_merge($arraycglo,$arrayscglo);
+   
+    	#-------------------------------------------
+    	
+    	
+    	
+    	
+    	
+ 
+    	
+    	
+    	
+    	
+    	return $this->render('shuffle/shuffle.html.twig', [
+    			'id' => $id,
+    			'error'=>$error,
+    			'arrayglo'=>$arrayglo,
+    			
+    	]);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * @Route("/shuffle/delete/{id}", name="deleteshuffle")

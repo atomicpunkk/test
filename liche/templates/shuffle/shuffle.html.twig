@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shuffle !{% endblock %}
+
+{% block body %}
+<div class="container">
+
+
+{% if error %}
+    {% for errors in error %}
+        {{ errors.phrase }}   
+        <br> 
+    {% endfor %}
+{% endif %}
+
+
+{% if arrayglo %}
+<div class="tableau">
+    <table>
+    {% for phrase in arrayglo %}
+        <tr>
+        <td class="gage">
+        {{ phrase.phrase }}
+        </td>
+        <td class="nbr">
+        {{ phrase.nbr }}
+        </tr>             
+    {% endfor %}
+    </table>
+</div>
+
+<a href="{{path('shufflethis', {id: id})}}" class="btn btn-info" style="margin-top:5px;width:200px;">shuffle</a>
+{% endif %}
+
+
+
+
+</div>
+{% endblock %}

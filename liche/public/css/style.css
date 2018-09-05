@@ -22,3 +22,15 @@
 .space-left{
     margin-left:15px;
 }
+td
+{
+    border:1px solid black;
+}
+.gage
+{
+    color : red;
+}
+.nbr
+{
+    color:blue;
+}
