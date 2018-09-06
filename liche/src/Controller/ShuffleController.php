@@ -104,7 +104,16 @@ class ShuffleController extends AbstractController
     	$tenta=0;
     	
     	
+    	$saison = $this->getDoctrine()
+    	->getRepository(Saison::class)
+    	->find($id);
     	
+    	
+    	
+    	$val = set_time_limit(30);
+    	
+    	$errorconst=array();
+    	$errorto="false";
     	$repo = $this->getDoctrine()->getRepository(Sentences::class);
     	$error=array();
     	$phrases=array();
@@ -168,6 +177,13 @@ class ShuffleController extends AbstractController
     	
     	foreach($pavecc as $const){
     		
+    		
+    	
+    		
+    		
+    		
+    		
+    		
     		#--------Traitement supp--------------------
     		
     		if (preg_match("/^\>/",$const['const'])) {
@@ -180,7 +196,15 @@ class ShuffleController extends AbstractController
     			else{
     				$numbsupp = rand($tempsupp ,$nombretotal);
     				while (array_search($numbsupp,array_column($arraycglo, 'nbr')) !== false) {
+    					
+    					
+    					
+    					
+    					
+    					
+    					
     					$numbsupp = rand($tempsupp,$nombretotal);
+    					
     					
     				}
     				
@@ -200,7 +224,15 @@ class ShuffleController extends AbstractController
     				
     				$numbinf = rand(1,$tempinf);
     				while (array_search($numbinf, array_column($arraycglo, 'nbr')) !== false) {
+    					
+    					
+    					
     					$numbinf = rand(1,$tempinf);
+    					
+    					
+    					
+    					
+    					
     				}
     				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf, 'id'=>$const['id']));
     				
@@ -208,7 +240,16 @@ class ShuffleController extends AbstractController
     			else{
     				$numbinf = rand(1,$tempinf);
     				while (array_search($numbinf, array_column($arraycglo, 'nbr')) !== false) {
+    					
+    					
+    					
+    					
+    					
+    					
+    					
+    					
     					$numbinf = rand(1,$tempinf);
+    					
     				}
     				
     				array_push($arraycglo, array('phrase'=> $const['phrase'],'nbr'=> $numbinf, 'id'=>$const['id']));
@@ -216,6 +257,29 @@ class ShuffleController extends AbstractController
     			}
     		}
     		#-------------------------------------------
+    		
+    	
+    		if (!preg_match("/^\</",$const['const'])){
+    			if (!preg_match("/^\>/",$const['const'])){
+    			
+    			
+    			array_push($errorconst, array('phrase'=>"vos contraintes doivent commencer par < ou >"));
+    			
+    			return $this->render('shuffle/get.html.twig', [
+    					'errorconst' => $errorconst,
+    					'saison'=> $saison,
+    					
+    			]);
+    	      }
+    		
+    		}
+    		
+    		
+    		
+    		
+    		
+    		
+    		
     		
     	}
     	
@@ -270,8 +334,7 @@ class ShuffleController extends AbstractController
         }
     	
     	
- 
-    	
+
     	
     	
     	
@@ -279,12 +342,49 @@ class ShuffleController extends AbstractController
     			'id' => $id,
     			'error'=>$error,
     			'arrayglo'=>$arrayglo,
+    			'saison'=>$saison,
+    			'errorto'=>$errorto,
+    			
+
     			
     	]);
     }
     
   
     
+    
+    
+    
+    
+    /**
+     * @Route("/shuffle/show/{id}", name="shuffleshow")
+     */
+    public function show($id)
+    {
+    
+   
+    	
+    	
+    	$repo = $this->getDoctrine()->getRepository(Sentences::class);
+    	
+    	
+    	$show=$repo->findBySaison($id);
+  
+    	
+  
+    	
+    	
+    	
+    	
+    	
+    	
+    	return $this->render('shuffle/show.html.twig', [
+    			'show'=>$show,
+    			'id'=>$id,
+    	]);
+    }
+    
+     
     
     
     

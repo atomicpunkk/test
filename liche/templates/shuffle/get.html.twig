@@ -6,6 +6,13 @@
 
 <div class="container">
 <p class="title">Remplis tes gages ;D<p>
+
+
+{% if errorconst is defined %}
+<p class="text-center">vos contraintes doivent commencer par "<" ou ">"</p>
+{% endif %}
+
+
   {% if saison is not null %}
   <div class="row">
    <h3>{{ saison.name }}</h3> 
@@ -37,15 +44,17 @@
     <br>  <br>
     <a id='submit' class="btn btn-success" style="width:200px;">Valider les données</a>
     
+    
+ {% if not saison.isShuffle %}
     <br><a href="{{path('shufflethis', {id: saison.id})}}" class="btn btn-info" style="margin-top:5px;width:200px;">shuffle</a>
-
+{% endif %}
 
   {% if saison.isShuffle %}
-    <br><a href="#" class="btn btn-info" style="margin-top:5px;width:200px;">save</a>
+    <br><a href="{{ path('shuffleshow', {id: saison.id}) }}" class="btn btn-warning" style="margin-top:5px;width:200px;">Voir le tableau</a>
 {% endif %}
 
 
-
+ 
     <script src="{{ asset('js/pushSentence.js')}}"> 
     </script>
     <script>

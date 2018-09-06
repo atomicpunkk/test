@@ -3,9 +3,12 @@
 {% block title %}Shuffle !{% endblock %}
 
 {% block body %}
+
+
+
+
 <div class="container">
-
-
+<p class="title">Voici le tableau shuffle, tu peux shuffle de nouveau ou voir le tableau<p>
 {% if error %}
     {% for errors in error %}
         {{ errors.phrase }}   
@@ -30,6 +33,10 @@
 </div>
 
 <a href="{{path('shufflethis', {id: id})}}" class="btn btn-info" style="margin-top:5px;width:200px;">shuffle</a>
+
+{% if saison.isShuffle %}
+ <br><a href="{{ path('shuffleshow', {id: saison.id}) }}" class="btn btn-warning" style="margin-top:5px;width:200px;">Sauvegarder et quitter</a>
+{% endif %}
 
 {% endif %}
 

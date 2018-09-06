@@ -34,3 +34,13 @@ td
 {
     color:blue;
 }
+
+.gage, .nbr
+{
+    padding:5px;
+}
+
+.show
+{
+    visibility:show;
+}

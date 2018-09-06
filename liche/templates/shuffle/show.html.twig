@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show !{% endblock %}
+
+{% block body %}
+<div class="container">
+<p class="title">Entre le numéro<p>
+
+
+
+
+
+<form action="/shuffle/show/{{ id }}" method='POST'>
+    <div class="form-group">
+         <label for="nombre" class="form-text">Nombre :</label>
+      <input id="tesst" name="nombre" type="text" class="form-control" required>
+     </div>
+    <button type="submit" class="btn btn-success" >submit !</button>
+    </form>
+
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="tableau show">
+ <table>
+    
+{% for ph in show %}  
+     {% if app.request.request.get("nombre") %}   
+            {% if ph.orders == app.request.request.get("nombre") %}  
+                <tr>
+                     <td class="gage"> 
+                          {{ ph.content }}
+                     </td>
+            
+                     <td class="nbr">
+                          {{ph.orders}}
+                     </td>
+                 </tr> 
+            {% endif %}
+    {% endif %}
+{% endfor %}
+
+
+
+
+</table>
+</div>
+
+
+</div>
+{% endblock %}
