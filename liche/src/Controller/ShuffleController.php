@@ -13,6 +13,28 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ShuffleController extends AbstractController
 {
+
+
+
+
+
+/**
+     * @Route("/", name="home")
+     */
+    public function home()
+    {
+        
+
+        return $this->render('shuffle/home.html.twig', [
+        ]);
+    }
+
+
+
+
+
+
+
     /**
      * @Route("/shuffle", name="shuffle")
      */
@@ -448,7 +470,7 @@ class ShuffleController extends AbstractController
     }
     
             /**
-     * @Route("/put", name="putsentences")
+     * @Route("/shuffle/put", name="putsentences")
      */
     public function put()
     {
