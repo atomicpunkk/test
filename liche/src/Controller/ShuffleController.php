@@ -469,7 +469,7 @@ class ShuffleController extends AbstractController
 
     }
     
-            /**
+    /**
      * @Route("/shuffle/put", name="putsentences")
      */
     public function put()
